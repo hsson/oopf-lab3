@@ -1,9 +1,11 @@
-package orig2011.v0;
+package orig2011.v1;
+
+import orig2011.v0.*;
 
 /**
  * Factory class for available games.
  */
-public class GameFactory implements IGameFactory {
+public class ReversiFactory implements IGameFactory {
 
 	/**
 	 * Returns an array with names of games this factory can create. Used by GUI
@@ -11,7 +13,7 @@ public class GameFactory implements IGameFactory {
 	 */
 	@Override
 	public String[] getGameNames() {
-		return new String[] { "Gold"};
+		return new String[] { "Gold", "Reversi"};
 	}
 
 	/**
@@ -26,6 +28,8 @@ public class GameFactory implements IGameFactory {
 	public GameModel createGame(final String gameName) {
 		if (gameName.equals("Gold")) {
 			return new GoldModel();
+		} else if (gameName.equals("Reversi")) {
+			return new ReversiModel();
 		}
 
 		throw new IllegalArgumentException("No such game: " + gameName);
