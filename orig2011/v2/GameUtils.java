@@ -6,7 +6,7 @@ public final class GameUtils {
     /**
      * Returns the size of the gameboard.
      */
-    public Dimension getGameboardSize() {
+    public static Dimension getGameboardSize() {
         return Constants.getGameSize();
     }
 }

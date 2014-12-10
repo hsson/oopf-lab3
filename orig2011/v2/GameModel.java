@@ -26,29 +26,6 @@ public interface GameModel {
 	 */
 	public GameTile getGameboardState(final int x, final int y);
 
-	/**
-	 * Set the tile on a specified position in the gameboard.
-	 *
-	 * @param pos
-	 *            The position in the gameboard matrix.
-	 * @param tile
-	 *            The type of tile to paint in specified position
-	 */
-	public void setGameboardState(final Position pos, final GameTile tile);
-
-	/**
-	 * Set the tile on a specified position in the gameboard.
-	 *
-	 * @param x
-	 *            Coordinate in the gameboard matrix.
-	 * @param y
-	 *            Coordinate in the gameboard matrix.
-	 * @param tile
-	 *            The type of tile to paint in specified position
-	 */
-	public void setGameboardState(final int x, final int y,
-									 final GameTile tile);
-
 
 	/**
 	 * This method is called repeatedly so that the game can update it's state.
