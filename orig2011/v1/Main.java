@@ -1,7 +1,5 @@
 package orig2011.v1;
 
-import orig2011.v0.GUIView;
-
 import javax.swing.*;
 
 /**
