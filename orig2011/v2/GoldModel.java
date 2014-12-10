@@ -15,7 +15,7 @@ import java.util.List;
  * of remaining coins. The game is won when all coins are collected and lost when
  * collector leaves game board.
  */
-public class GoldModel extends GameModel {
+public class GoldModel implements GameModel {
 	public enum Directions {
 		EAST(1, 0),
 		WEST(-1, 0),
@@ -41,6 +41,8 @@ public class GoldModel extends GameModel {
 	}
 
 	private static final int COIN_START_AMOUNT = 20;
+
+	private final GameTile[][] gameboardState;
 
 	/*
 	 * The following GameTile objects are used only
@@ -87,7 +89,9 @@ public class GoldModel extends GameModel {
 	 * Create a new model for the gold game.
 	 */
 	public GoldModel() {
-		Dimension size = getGameboardSize();
+		this.gameboardState =
+				new GameTile[GameUtils.getGameboardSize().width][GameUtils.getGameboardSize().height];
+		Dimension size = GameUtils.getGameboardSize();
 
 		// Blank out the whole gameboard
 		for (int i = 0; i < size.width; i++) {
@@ -111,7 +115,7 @@ public class GoldModel extends GameModel {
 	 */
 	private void addCoin() {
 		Position newCoinPos;
-		Dimension size = getGameboardSize();
+		Dimension size = GameUtils.getGameboardSize();
 		// Loop until a blank position is found and ...
 		do {
 			newCoinPos = new Position((int) (Math.random() * size.width),
@@ -167,6 +171,41 @@ public class GoldModel extends GameModel {
 				this.collectorPos.getY() + this.direction.getYDelta());
 	}
 
+	public GameTile getGameboardState(final Position pos) {
+		return getGameboardState(pos.getX(), pos.getY());
+	}
+
+	public GameTile getGameboardState(final int x, final int y) {
+		return this.gameboardState[x][y];
+	}
+
+	/**
+	 * Set the tile on a specified position in the gameboard.
+	 *
+	 * @param pos
+	 *            The position in the gameboard matrix.
+	 * @param tile
+	 *            The type of tile to paint in specified position
+	 */
+	protected void setGameboardState(final Position pos, final GameTile tile) {
+		setGameboardState(pos.getX(), pos.getY(), tile);
+	}
+
+	/**
+	 * Set the tile on a specified position in the gameboard.
+	 *
+	 * @param x
+	 *            Coordinate in the gameboard matrix.
+	 * @param y
+	 *            Coordinate in the gameboard matrix.
+	 * @param tile
+	 *            The type of tile to paint in specified position
+	 */
+	protected void setGameboardState(final int x, final int y,
+									 final GameTile tile) {
+		this.gameboardState[x][y] = tile;
+	}
+
 	/**
 	 * This method is called repeatedly so that the
 	 * game can update its state.
@@ -215,8 +254,8 @@ public class GoldModel extends GameModel {
 	 * @return <code>false</code> if the position is outside the playing field, <code>true</code> otherwise.
 	 */
 	private boolean isOutOfBounds(Position pos) {
-		return pos.getX() < 0 || pos.getX() >= getGameboardSize().width
-				|| pos.getY() < 0 || pos.getY() >= getGameboardSize().height;
+		return pos.getX() < 0 || pos.getX() >= GameUtils.getGameboardSize().width
+				|| pos.getY() < 0 || pos.getY() >= GameUtils.getGameboardSize().height;
 	}
 
 }
