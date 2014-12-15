@@ -2,22 +2,12 @@ package orig2011.v3;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * A view Component suitable for inclusion in an AWT Frame. Paints itself by
  * consulting its model.
  */
 public class GameView extends JComponent {
-	private static String[][] keyMap = {{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "light", "lock", null, null, "mute"},
-			{null, "esc", null, "f1", "f2", "f3", "f4", null, "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "prtscn", "scroll", "pause", "stop", "prev", "play", "next"},
-			{null, "grave", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "minus", "equal", "bspace", "bspace", "ins", "home", "pgup", "numlock", "numslash", "numstar", "numminus"},
-			{null, "tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "lbrace", "rbrace", "enter", "enter", "del", "end", "pgdn", "num7", "num8", "num9", "numplus"},
-			{null, "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", "colon", "quote", null, "enter", "enter", null, null, null, "num4", "num5", "num6", "numplus"},
-			{"lshift", null, "z", "x", "c", "v", "b", "n", "m", "comma", "dot", "slash", "rshift", "rshift", "rshift", null, null,   "up",   null, "num1", "num2", "num3", "numenter"},
-			{"lctrl", "lwin", "lalt", "space", "space", "space", "space", "space", "space", "space", "ralt", "rwin", "rmenu", "rctrl", "rctrl", null, "left", "down", "right", "num0", "num0", "numdot", "numenter"}};
 
 	/** Size of game model */
 	private final Dimension modelSize;
@@ -103,31 +93,15 @@ public class GameView extends JComponent {
 				for (int j = 0; j < this.modelSize.height; j++) {
 					GameTile tile = this.model.getGameboardState(i, j);
 					tile.draw(g, i * this.tileSize.width, j
-							* this.tileSize.height,
+									* this.tileSize.height,
 							this.tileSize);
-					setKey(keyMap[j][i], "00ff00");
 				}
 			}
 		} else {
 			g.setFont(new Font("Sans", Font.BOLD, 24));
 			g.setColor(Color.BLACK);
-			final char[] message = "No model chosen.".toCharArray(); 
+			final char[] message = "No model chosen.".toCharArray();
 			g.drawChars(message, 0, message.length, 50, 50);
 		}
-
-
-	}
-
-	public static void setKey(String keyCode, String color){
-		try {
-			Runtime run = Runtime.getRuntime();
-
-			Process proc = run.exec(new String[]{"/bin/sh", "-c", "echo rgb " + keyCode + ":" + color + " > /dev/input/ckb1/cmd"});
-			proc.waitFor();
-			BufferedReader br = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-			while (br.ready())
-				System.out.println(br.readLine());
-		}catch (IOException e){}
-		catch (InterruptedException ex){}
 	}
 }
