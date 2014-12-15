@@ -87,6 +87,7 @@ public class ReversiModel implements GameModel {
 	private final int width;
 	private final int height;
 	private boolean gameOver;
+	private static final int UPDATE_SPEED = 150;
 
 	private PropertyChangeSupport observerable = new PropertyChangeSupport(this);
 
@@ -388,6 +389,10 @@ public class ReversiModel implements GameModel {
 		} else {
 			throw new GameOverException(this.blackScore - this.whiteScore);
 		}
+	}
+
+	public int getUpdateSpeed() {
+		return UPDATE_SPEED;
 	}
 
 	private void removeCursor(final Position oldCursorPos) {

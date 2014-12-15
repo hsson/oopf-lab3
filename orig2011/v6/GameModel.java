@@ -34,4 +34,11 @@ public interface GameModel extends IObservable {
 	 *            The most recent keystroke.
 	 */
 	public void gameUpdate(int lastKey) throws GameOverException;
+
+	/**
+	 * Get how often the model wants time driven actions to occur.
+	 *
+	 * @return The update interval in milliseconds
+	 */
+	public int getUpdateSpeed();
 }

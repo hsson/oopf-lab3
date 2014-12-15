@@ -49,6 +49,8 @@ public class GoldModel implements GameModel {
 
 	private final GameTile[][] gameboardState;
 
+	private static final int UPDATE_SPEED = 150;
+
 	/*
 	 * The following GameTile objects are used only
 	 * to describe how to paint the specified item.
@@ -276,6 +278,10 @@ public class GoldModel implements GameModel {
 
 	public void removeObserver(PropertyChangeListener observer) {
 		observable.removePropertyChangeListener(observer);
+	}
+
+	public int getUpdateSpeed() {
+		return UPDATE_SPEED;
 	}
 
 }
