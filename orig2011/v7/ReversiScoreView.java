@@ -17,7 +17,8 @@ public class ReversiScoreView extends JFrame implements PropertyChangeListener {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         this.add(new ScorePanel());
-
+        this.setLocationRelativeTo(null);
+        this.pack();
         this.setVisible(true);
     }
 
@@ -49,6 +50,8 @@ public class ReversiScoreView extends JFrame implements PropertyChangeListener {
 
             this.add(pTurn);
             this.add(scoreLabel);
+
+            this.setPreferredSize(new Dimension(500, 200));
         }
 
         @Override
