@@ -2,12 +2,14 @@ package orig2011.v5;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * A view Component suitable for inclusion in an AWT Frame. Paints itself by
  * consulting its model.
  */
-public class GameView extends JComponent {
+public class GameView extends JComponent implements PropertyChangeListener{
 
 	/** Size of game model */
 	private final Dimension modelSize;
@@ -103,5 +105,9 @@ public class GameView extends JComponent {
 			final char[] message = "No model chosen.".toCharArray();
 			g.drawChars(message, 0, message.length, 50, 50);
 		}
+	}
+
+	public void propertyChange(PropertyChangeEvent evt) {
+		repaint();
 	}
 }
