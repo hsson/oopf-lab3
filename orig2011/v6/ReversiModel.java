@@ -87,7 +87,7 @@ public class ReversiModel implements GameModel {
 	private final int width;
 	private final int height;
 	private boolean gameOver;
-	private static final int UPDATE_SPEED = 150;
+	private static final int UPDATE_SPEED = 0;
 
 	private PropertyChangeSupport observerable = new PropertyChangeSupport(this);
 

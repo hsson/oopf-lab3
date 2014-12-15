@@ -19,9 +19,6 @@ public class GameController implements Runnable {
 	/** The game model describes the running game. */
 	private GameModel gameModel;
 
-	/** The timeout interval between each update. (millis) */
-	private final int updateInterval;
-
 	/** True when game is running. */
 	private boolean isRunning;
 
@@ -49,7 +46,6 @@ public class GameController implements Runnable {
 		this.view = view;
 		this.gameModel = null;
 		this.isRunning = false;
-		this.updateInterval = 150;
 
 		this.keypresses = new LinkedList<Integer>();
 
@@ -70,7 +66,15 @@ public class GameController implements Runnable {
 	 * Add a key press to the end of the queue
 	 */
 	private synchronized void enqueueKeyPress(final int key) {
-		this.keypresses.add(Integer.valueOf(key));
+		if (this.gameModel.getUpdateSpeed() > 0) {
+			this.keypresses.add(Integer.valueOf(key));
+		} else {
+			try {
+				this.gameModel.gameUpdate(key);
+			} catch (GameOverException e) {
+				gameOver(e.getScore());
+			}
+		}
 	}
 
 	/**
@@ -106,6 +110,7 @@ public class GameController implements Runnable {
 
 		// Actually start the game
 		this.gameModel = gameModel;
+
 		this.isRunning = true;
 
 		// Create the new thread and start it...
@@ -153,16 +158,24 @@ public class GameController implements Runnable {
 
 				this.view.repaint();
 
-				Thread.sleep(this.updateInterval);
+				if (this.gameModel.getUpdateSpeed() > 0) {
+					Thread.sleep(this.gameModel.getUpdateSpeed());
+				} else {
+					Thread.sleep(Long.MAX_VALUE);
+				}
 			} catch (GameOverException e) {
-				// we got a game over signal, time to exit...
-				// The current implementation ignores the game score
-				this.isRunning = false;
-				System.out.println("Game over: " + e.getScore());
+				gameOver(e.getScore());
 			} catch (InterruptedException e) {
 				// if we get this exception, we're asked to terminate ourselves
 				this.isRunning = false;
 			}
 		}
+	}
+
+	private void gameOver(int score) {
+		// we got a game over signal, time to exit...
+		// The current implementation ignores the game score
+		this.isRunning = false;
+		System.out.println("Game over: " + score);
 	}
 }

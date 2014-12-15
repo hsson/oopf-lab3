@@ -36,7 +36,8 @@ public interface GameModel extends IObservable {
 	public void gameUpdate(int lastKey) throws GameOverException;
 
 	/**
-	 * Get how often the model wants time driven actions to occur.
+	 * Get how often the model wants time driven actions to occur. If
+	 * set to 0, the game will never update.
 	 *
 	 * @return The update interval in milliseconds
 	 */
