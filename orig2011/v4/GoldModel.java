@@ -1,7 +1,11 @@
 package orig2011.v4;
 
+import com.sun.org.apache.xalan.internal.utils.XMLSecurityPropertyManager;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +20,7 @@ import java.util.List;
  * collector leaves game board.
  */
 public class GoldModel implements GameModel {
+
 	public enum Directions {
 		EAST(1, 0),
 		WEST(-1, 0),
@@ -41,6 +46,8 @@ public class GoldModel implements GameModel {
 	}
 
 	private static final int COIN_START_AMOUNT = 20;
+
+	private PropertyChangeSupport observable = new PropertyChangeSupport(this);
 
 	private final GameTile[][] gameboardState;
 
@@ -143,6 +150,7 @@ public class GoldModel implements GameModel {
 	 * according to the user's keypress.
 	 */
 	private void updateDirection(final int key) {
+		Directions oldDir = direction;
 		switch (key) {
 			case KeyEvent.VK_LEFT:
 				this.direction = Directions.WEST;
@@ -160,6 +168,7 @@ public class GoldModel implements GameModel {
 				// Don't change direction if another key is pressed
 				break;
 		}
+		this.observable.firePropertyChange("Direction", oldDir, direction);
 	}
 
 	/**
@@ -203,7 +212,9 @@ public class GoldModel implements GameModel {
 	 */
 	protected void setGameboardState(final int x, final int y,
 									 final GameTile tile) {
+		GameTile oldTile = getGameboardState(x,y);
 		this.gameboardState[x][y] = tile;
+		this.observable.firePropertyChange("Tile:" + x + ":" + y, oldTile, tile);
 	}
 
 	/**
@@ -223,6 +234,7 @@ public class GoldModel implements GameModel {
 		this.collectorPos = getNextCollectorPos();
 
 		if (isOutOfBounds(this.collectorPos)) {
+			this.observable.firePropertyChange("GameOver", false, true);
 			throw new GameOverException(this.score);
 		}
 		// Draw collector at new position.
@@ -235,7 +247,9 @@ public class GoldModel implements GameModel {
 
 		// Check if all coins are found
 		if (this.coins.isEmpty()) {
+			this.observable.firePropertyChange("GameOver", false, true);
 			throw new GameOverException(this.score + 5);
+
 		}
 
 		// Remove one of the coins
@@ -256,6 +270,14 @@ public class GoldModel implements GameModel {
 	private boolean isOutOfBounds(Position pos) {
 		return pos.getX() < 0 || pos.getX() >= GameUtils.getGameboardSize().width
 				|| pos.getY() < 0 || pos.getY() >= GameUtils.getGameboardSize().height;
+	}
+
+	public void addObserver(PropertyChangeListener observer) {
+		observable.addPropertyChangeListener(observer);
+	}
+
+	public void removeObserver(PropertyChangeListener observer) {
+		observable.removePropertyChangeListener(observer);
 	}
 
 }
