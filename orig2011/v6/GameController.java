@@ -114,8 +114,10 @@ public class GameController implements Runnable {
 		this.isRunning = true;
 
 		// Create the new thread and start it...
-		this.gameThread = new Thread(this);
-		this.gameThread.start();
+		if (this.gameModel.getUpdateSpeed() > 0) {
+			this.gameThread = new Thread(this);
+			this.gameThread.start();
+		}
 	}
 
 	/**
@@ -157,12 +159,8 @@ public class GameController implements Runnable {
 				this.gameModel.gameUpdate(nextKeyPress());
 
 				this.view.repaint();
+				Thread.sleep(this.gameModel.getUpdateSpeed());
 
-				if (this.gameModel.getUpdateSpeed() > 0) {
-					Thread.sleep(this.gameModel.getUpdateSpeed());
-				} else {
-					Thread.sleep(Long.MAX_VALUE);
-				}
 			} catch (GameOverException e) {
 				gameOver(e.getScore());
 			} catch (InterruptedException e) {

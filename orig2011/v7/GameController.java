@@ -114,8 +114,10 @@ public class GameController implements Runnable {
 		this.isRunning = true;
 
 		// Create the new thread and start it...
-		this.gameThread = new Thread(this);
-		this.gameThread.start();
+		if (this.gameModel.getUpdateSpeed() > 0) {
+			this.gameThread = new Thread(this);
+			this.gameThread.start();
+		}
 	}
 
 	/**
@@ -150,6 +152,7 @@ public class GameController implements Runnable {
 	 */
 	@Override
 	public void run() {
+
 		while (this.isRunning) {
 			try {
 				// Tell model to update, send next key press.
@@ -158,11 +161,8 @@ public class GameController implements Runnable {
 
 				this.view.repaint();
 
-				if (this.gameModel.getUpdateSpeed() > 0) {
-					Thread.sleep(this.gameModel.getUpdateSpeed());
-				} else {
-					Thread.sleep(Long.MAX_VALUE);
-				}
+				Thread.sleep(this.gameModel.getUpdateSpeed());
+
 			} catch (GameOverException e) {
 				gameOver(e.getScore());
 			} catch (InterruptedException e) {
